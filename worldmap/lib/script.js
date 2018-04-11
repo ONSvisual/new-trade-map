@@ -8,6 +8,9 @@ var pymChild = new pym.Child();
           .defer(d3.json, "geo/worldjson8.json")
           .await(ready);
 
+//remove fallback image
+d3.select("#fallback").remove();
+
 
 function ready (error, dataexports, dataimports, geog){
 
@@ -163,8 +166,9 @@ zippeddataE.forEach(function(d,i){
 })
 
 //get data for that country for all years
-countrydata_allI = dataimports.filter(function(d){return d.CountryId==code})
-countrydata_allE = dataexports.filter(function(d){return d.CountryId==code})
+countrydata_allI = dataimports.filter(function(d){return d.CountryId==code })
+countrydata_allE = dataexports.filter(function(d){return d.CountryId==code })
+
 
 //find the data for all the top 5 commodities
 temparrayI=[]
@@ -188,27 +192,21 @@ for(var i=0;i<top5codesI.length;i++){
                                   .map(function(d){return {date:d3.timeParse("%Y")(d.year),amt:d.amt}})
 }
 
+
+
 newarrayE = {};
 for(var i=0;i<top5codesE.length;i++){
   newarrayE[top5codesE[i]]=temparrayE.filter(function(d){return d.code==top5codesE[i]})
                                   .map(function(d){return {date:d3.timeParse("%Y")(d.year),amt:d.amt}})
 }
 
-
-console.log("newarrayI")
-console.log(newarrayI)
-console.log(d3.entries(newarrayI))
-
 perchangeI=[]
 for(var i=0;i<top5codesI.length;i++){
-    console.log()
     perchangeI[i]=(newarrayI[top5codesI[i]][top5codesI.length-1].amt-newarrayI[top5codesI[i]][0].amt)/newarrayI[top5codesI[i]][0].amt
-     console.log(perchangeI[i])
 }
 
 perchangeE=[]
 for(var i=0;i<top5codesE.length;i++){
-  console.log()
   perchangeE[i]=(newarrayE[top5codesE[i]][top5codesE.length-1].amt-newarrayE[top5codesE[i]][0].amt)/newarrayE[top5codesE[i]][0].amt
 }
 
@@ -342,7 +340,7 @@ svgSparkE.select('#sparkyE').selectAll('path')
   d3.select(".perchangeI").selectAll('text')
   .data(perchangeI)
   .attr('x',3*width/48)
-  .attr('y',function(d,i){return yImport.bandwidth()*i+i*yImport.bandwidth()/10+yImport.bandwidth()/2})
+  .attr('y',function(d,i){return yImport.bandwidth()*i+yImport.bandwidth()/2})
   .attr("text-anchor", "start")
   .style("font-size", "12px")
   .style("fill", "#666")
@@ -352,7 +350,7 @@ svgSparkE.select('#sparkyE').selectAll('path')
 d3.select(".perchangeE").selectAll('text')
   .data(perchangeE)
   .attr('x',3*width/48)
-  .attr('y',function(d,i){return yExport.bandwidth()*i+i*yExport.bandwidth()/10+yExport.bandwidth()/2})
+  .attr('y',function(d,i){return yExport.bandwidth()*i+yExport.bandwidth()/2})
   .attr("text-anchor", "start")
   .style("font-size", "12px")
   .style("fill", "#666")
@@ -414,75 +412,80 @@ function getCentroids() {
 					{return "[" + d3.geoCentroid(d) + "]"}
 			});
 
-//		dvc.allcentroids = [];
-//
-//		d3.selectAll(dvc.flowdata.ons.area).each(function(d,i){
-//			dvc.allcentroids.push(d3.select("#" + dvc.flowdata.ons.area[i]).attr("data-cd"));
-//		});
+
 } //end Get Centriods
 
 
 
 function highlightcountry(countrycode) {
-	//Update dropdown
-	$("#areaselect").val(countrycode).trigger('change.select2');
+//if not disputed regions of Western Sahara or Palestine.
+  // if(countrycode==null){
+  //   	unhighlightcountry(null)
+  // }else{
+    //Update dropdown
+    $("#areaselect").val(countrycode).trigger('change.select2');
 
-    //Draw barcode highlight rects on top of all bars
-	if(mobile == false) {
-
-		console.log("I'm here");
-		d3.selectAll("." + countrycode).each(fadeToFront);
-		//Give map area a highlight class
-		d3.select("#shape" + countrycode).classed("countries_highlights",true);
-
-
-		//Draw arc from UK to destination
-		var coordsfrom = d3.select("#shapeUK").attr("data-cd");
-
-		var coordsto = d3.select("#shape" + countrycode).attr("data-cd");
-
-		lines = [];
-
-		lines.push({
-			type: "LineString",
-			coordinates: JSON.parse("[" + coordsto + "," + coordsfrom + "]")
-		});
+      //Draw barcode highlight rects on top of all bars
+    if(mobile == false) {
 
 
-		d3.select(".allcountry").selectAll(".mapArcsLow")
-			.data(lines)
-			.enter()
-			.append("path")
-			.attr("class", "mapArcsLow")
-			.attr("d",path)
-			.attr("stroke", "url(#svgGradient)")
-			.attr("stroke-width", "2px")
-			.style("stroke-linecap", 'round')
-			.style("stroke-linejoin", 'round')
-			.attr("fill","none")
-			.attr("pointer-events", "none");
+      d3.selectAll("." + countrycode).each(fadeToFront);
+      //Give map area a highlight class
+      d3.select("#shape" + countrycode).classed("countries_highlights",true);
 
 
-	} else {
-		d3.selectAll("." + countrycode).each(fadeToFront1);
-	}
+      //Draw arc from UK to destination
+      var coordsfrom = d3.select("#shapeUK").attr("data-cd");
 
-	//Get total values for imports/exports
-	var importval = d3.select("#" + countrycode + "_I").attr("data-nm");
-	var exportval = d3.select("#" + countrycode + "_E").attr("data-nm");
+      var coordsto = d3.select("#shape" + countrycode).attr("data-cd");
 
-	//barcode labels
-	d3.select("#importlabel").html("<p>Imports</p><p class='labelbold'>£"+ d3.format(",")(importval) +"m</p>")
-	d3.select("#exportlabel").html("<p>Exports</p><p class='labelbold'>£"+ d3.format(",")(exportval) +"m</p>")
+      lines = [];
+
+      lines.push({
+        type: "LineString",
+        coordinates: JSON.parse("[" + coordsto + "," + coordsfrom + "]")
+      });
 
 
-    //Get country name
-    a = areacodes.indexOf(countrycode);
-    countryname = areanames[a]
+      d3.select(".allcountry").selectAll(".mapArcsLow")
+        .data(lines)
+        .enter()
+        .append("path")
+        .attr("class", "mapArcsLow")
+        .attr("d",path)
+        .attr("stroke", "url(#svgGradient)")
+        .attr("stroke-width", "2px")
+        .style("stroke-linecap", 'round')
+        .style("stroke-linejoin", 'round')
+        .attr("fill","none")
+        .attr("pointer-events", "none");
 
-    //Update labels
-    d3.select("#tradewith").html("UK trade with " + countryname + " <span style='font-weight:300'>2016</span>")
+        //don't highlight countries with null as their code e.g. Western Sahara, West Bank
+    if(countrycode==null){
+      unhighlightcountry(null)
+    }
 
+
+    } else {
+      d3.selectAll("." + countrycode).each(fadeToFront1);
+    }
+
+    //Get total values for imports/exports
+    var importval = d3.select("#" + countrycode + "_I").attr("data-nm");
+    var exportval = d3.select("#" + countrycode + "_E").attr("data-nm");
+
+    //barcode labels
+    d3.select("#importlabel").html("<p>Imports</p><p class='labelbold'>£"+ d3.format(",")(importval) +"m</p>")
+    d3.select("#exportlabel").html("<p>Exports</p><p class='labelbold'>£"+ d3.format(",")(exportval) +"m</p>")
+
+
+      //Get country name
+      a = areacodes.indexOf(countrycode);
+      countryname = areanames[a]
+
+      //Update labels
+      d3.select("#tradewith").html("UK trade with " + countryname + " <span style='font-weight:300'>2016</span>")
+  // }
 
 } //end highlightcountry
 
@@ -493,13 +496,13 @@ function unhighlightcountry(countrycode) {
 	//update dropdown
 	$("#areaselect").val("").trigger('change.select2');
 
-	console.log(countrycode);
+
 	d3.select("#shape" + countrycode).classed("countries_highlights",false);
 	d3.select(".mapArcsLow").remove();
 	d3.selectAll(".highlights").remove();
 
-    //Update labels
-    d3.select("#tradewith").html("Overall UK trade <span style='font-weight:300'>2016</span>")
+  //Update labels
+  d3.select("#tradewith").html("Overall UK trade <span style='font-weight:300'>2016</span>")
 
 	d3.select("#shape" + countrycode).classed("countries_highlights",false);
 
@@ -704,7 +707,7 @@ function createBarcode(){
 			.append("rect")
 			.attr("id", function(d){return d.CountryId + "_I"})
 			.attr("data-nm", function(d) {return d.total})
-			.attr("fill","#f362b7")
+			.attr("fill",colour_palette[0])
 			.attr("fill-opacity",0.2)
 			.attr("stroke","#fff")
 			.attr("stroke-opacity","0")
@@ -729,7 +732,7 @@ function createBarcode(){
 			.append("rect")
 			.attr("id", function(d){return d.CountryId + "_E"})
 			.attr("data-nm", function(d) {return d.total})
-			.attr("fill","#B8860B")
+			.attr("fill",colour_palette[1])
 			.attr("fill-opacity",0.2)
 			.attr("stroke","#fff")
 			.attr("stroke-opacity","0")
@@ -748,7 +751,7 @@ function createBarcode(){
 			.on("mouseout", function(){unhighlightcountry(this.id.slice(0, 2))});
 
 //axis label
-     barcodeArea.append("text").attr("font-size","14px").attr("x",chartWidth-100).attr("y",barcodeHeight/2).text("£m")
+     barcodeArea.append("text").attr("font-size","14px").attr("x",chartWidth-100).attr("y",barcodeHeight/2+10).text("£m")
 	}
 
 } // end createBarcode
@@ -947,7 +950,7 @@ xAxis = d3.axisBottom(x)
          .call(xAxis)
          .append("text")
          .attr("y", 25)
-         .attr("x",3*chartWidth/4)
+         .attr("x",7*chartWidth/8)
          .attr("dy", ".71em")
          .style("text-anchor", "end")
          .attr("font-size","12px")
@@ -979,7 +982,7 @@ xAxis = d3.axisBottom(x)
          .call(xAxis)
          .append("text")
          .attr("y", 25)
-         .attr("x",3*chartWidth/4)
+         .attr("x",7*chartWidth/8)
          .attr("dy", ".71em")
          .style("text-anchor", "end")
          .attr("font-size","12px")
@@ -1349,43 +1352,43 @@ svgSparkE.append('g').attr("id","sparkyE").selectAll('path')
 
 
 
-                  d3.select("#sparklineI").select('svg')
-                  .append('g')
-                  .attr('class','perchangeI')
-                  .attr("transform", "translate(" + 20 + "," + margin.top + ")");
+    d3.select("#sparklineI").select('svg')
+    .append('g')
+    .attr('class','perchangeI')
+    .attr("transform", "translate(" + 12 + "," + margin.top + ")");
 
 
-                  d3.select("#sparklineE").select('svg')
-                  .append('g')
-                  .attr('class','perchangeE')
-                  .attr("transform", "translate(" + 20 + "," + margin.top + ")");
+    d3.select("#sparklineE").select('svg')
+    .append('g')
+    .attr('class','perchangeE')
+    .attr("transform", "translate(" + 12 + "," + margin.top + ")");
 
 //things for percentage change
-            dummyarrayfortext=[1,2,3,4,5]
+dummyarrayfortext=[1,2,3,4,5]
 
-            dummyarrayfortext.forEach(function(d,i){
-              d3.select(".perchangeI")
-              .append('text')
-              .attr('x',0)
-              .attr('y',yImport.bandwidth()/5*i)
-              .attr("text-anchor", "start")
-              .style("font-size", "12px")
-              .style("fill", "#666")
-              .attr("font-family","'Open Sans', sans-serif")
-              .text("");
-            })
+dummyarrayfortext.forEach(function(d,i){
+  d3.select(".perchangeI")
+  .append('text')
+  .attr('x',0)
+  .attr('y',yImport.bandwidth()/5*i)
+  .attr("text-anchor", "start")
+  .style("font-size", "12px")
+  .style("fill", "#666")
+  .attr("font-family","'Open Sans', sans-serif")
+  .text("");
+})
 
-			dummyarrayfortext.forEach(function(d,i){
-              d3.select(".perchangeE")
-              .append('text')
-              .attr('x',0)
-              .attr('y',yExport.bandwidth()/5*i)
-              .attr("text-anchor", "start")
-              .style("font-size", "12px")
-              .style("fill", "#666")
-              .attr("font-family","'Open Sans', sans-serif")
-              .text("");
-            })
+dummyarrayfortext.forEach(function(d,i){
+        d3.select(".perchangeE")
+        .append('text')
+        .attr('x',0)
+        .attr('y',yExport.bandwidth()/5*i)
+        .attr("text-anchor", "start")
+        .style("font-size", "12px")
+        .style("fill", "#666")
+        .attr("font-family","'Open Sans', sans-serif")
+        .text("");
+      })
 
 d3.select('#sparklineI').select("svg")
 .append('text')
@@ -1427,6 +1430,20 @@ pymChild.sendHeight();
 
 //set the map to world view initially
 filterdata("W1")
+
+//some code to stop select2 opening when clearing
+$('#areaselect').on('select2:unselecting', function(ev) {
+    if (ev.params.args.originalEvent) {
+        // When unselecting (in multiple mode)
+        ev.params.args.originalEvent.stopPropagation();
+    } else {
+        // When clearing (in single mode)
+        $(this).one('select2:opening', function(ev) { ev.preventDefault(); });
+        filterdata("W1")//set the it back to world view
+    }
+});
+
+
 }//end ready
 }//end modernizr
 else {
