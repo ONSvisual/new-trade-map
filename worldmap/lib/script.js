@@ -135,7 +135,7 @@ for (var column in latestcountrydataI[0]) {
     if (column == "CountryName") continue;
     if (column == "CountryId") continue;
     if (column == "Year") continue;
-	if (column == "Total") continue;
+  	if (column == "Total") continue;
     lastyeardataI.push(latestcountrydataI[0][column]);
 }
 
@@ -144,7 +144,7 @@ for (var column in latestcountrydataE[0]) {
     if (column == "CountryName") continue;
     if (column == "CountryId") continue;
     if (column == "Year") continue;
-	if (column == "Total") continue;
+	  if (column == "Total") continue;
     lastyeardataE.push(latestcountrydataE[0][column]);
 }
 
@@ -192,8 +192,6 @@ for(var i=0;i<top5codesI.length;i++){
                                   .map(function(d){return {date:d3.timeParse("%Y")(d.year),amt:d.amt}})
 }
 
-
-
 newarrayE = {};
 for(var i=0;i<top5codesE.length;i++){
   newarrayE[top5codesE[i]]=temparrayE.filter(function(d){return d.code==top5codesE[i]})
@@ -202,12 +200,12 @@ for(var i=0;i<top5codesE.length;i++){
 
 perchangeI=[]
 for(var i=0;i<top5codesI.length;i++){
-    perchangeI[i]=(newarrayI[top5codesI[i]][top5codesI.length-1].amt-newarrayI[top5codesI[i]][0].amt)/newarrayI[top5codesI[i]][0].amt
+    perchangeI[i]=(newarrayI[top5codesI[i]][top5codesI.length].amt-newarrayI[top5codesI[i]][0].amt)/newarrayI[top5codesI[i]][0].amt
 }
 
 perchangeE=[]
 for(var i=0;i<top5codesE.length;i++){
-  perchangeE[i]=(newarrayE[top5codesE[i]][top5codesE.length-1].amt-newarrayE[top5codesE[i]][0].amt)/newarrayE[top5codesE[i]][0].amt
+  perchangeE[i]=(newarrayE[top5codesE[i]][top5codesE.length].amt-newarrayE[top5codesE[i]][0].amt)/newarrayE[top5codesE[i]][0].amt
 }
 
 //stuff for bar charts
@@ -381,9 +379,6 @@ function getCentroids() {
 			centr['AS'] = ['[-170.7, -14.3 ]'];//American Samoa
       centr['CI'] = ['[-5.5, 7.8]'];//Ivory Coast
       centr['CR'] = ['[-83.8, 9.9 ]'];//Nigeria
-      // centr['NI'] = ['[-85.1, 12.8 ]'];//Nicaragua
-
-
 
 			d3.selectAll(".countries").attr("data-cd", function(d,i) {if(
         d.properties.fips == 'UK' ||
@@ -401,10 +396,6 @@ function getCentroids() {
         d.properties.fips== 'PO' ||
         d.properties.fips== 'AS' ||
         d.properties.fips== 'CR'
-        // d.properties.fips== 'NG' ||
-        // d.properties.fips== 'NI'
-
-
 
       )
 
@@ -412,31 +403,24 @@ function getCentroids() {
 					{return "[" + d3.geoCentroid(d) + "]"}
 			});
 
-
 } //end Get Centriods
 
 
 
 function highlightcountry(countrycode) {
-//if not disputed regions of Western Sahara or Palestine.
-  // if(countrycode==null){
-  //   	unhighlightcountry(null)
-  // }else{
+
     //Update dropdown
     $("#areaselect").val(countrycode).trigger('change.select2');
 
-      //Draw barcode highlight rects on top of all bars
+    //Draw barcode highlight rects on top of all bars
     if(mobile == false) {
-
 
       d3.selectAll("." + countrycode).each(fadeToFront);
       //Give map area a highlight class
       d3.select("#shape" + countrycode).classed("countries_highlights",true);
 
-
       //Draw arc from UK to destination
       var coordsfrom = d3.select("#shapeUK").attr("data-cd");
-
       var coordsto = d3.select("#shape" + countrycode).attr("data-cd");
 
       lines = [];
@@ -445,7 +429,6 @@ function highlightcountry(countrycode) {
         type: "LineString",
         coordinates: JSON.parse("[" + coordsto + "," + coordsfrom + "]")
       });
-
 
       d3.select(".allcountry").selectAll(".mapArcsLow")
         .data(lines)
@@ -460,10 +443,10 @@ function highlightcountry(countrycode) {
         .attr("fill","none")
         .attr("pointer-events", "none");
 
-        //don't highlight countries with null as their code e.g. Western Sahara, West Bank
-    if(countrycode==null){
-      unhighlightcountry(null)
-    }
+      //don't highlight countries with null as their code e.g. Western Sahara, West Bank
+      if(countrycode==null){
+        unhighlightcountry(null)
+      }
 
 
     } else {
@@ -479,12 +462,12 @@ function highlightcountry(countrycode) {
     d3.select("#exportlabel").html("<p>Exports</p><p class='labelbold'>£"+ d3.format(",")(exportval) +"m</p>")
 
 
-      //Get country name
-      a = areacodes.indexOf(countrycode);
-      countryname = areanames[a]
+    //Get country name
+    a = areacodes.indexOf(countrycode);
+    countryname = areanames[a]
 
-      //Update labels
-      d3.select("#tradewith").html("UK trade with " + countryname + " <span style='font-weight:300'>2016</span>")
+    //Update labels
+    d3.select("#tradewith").html("UK trade with " + countryname + " <span style='font-weight:300'>2016</span>")
   // }
 
 } //end highlightcountry
@@ -515,9 +498,7 @@ function unhighlightcountry(countrycode) {
 
 function createBarcode(){
 
-
-
-    //Get data
+  //Get data
 	barcodeimports = dataimports.filter(function(d){return d.Year==lastyear});
 	barcodeexports = dataexports.filter(function(d){return d.Year==lastyear});
   barcodeimports = barcodeimports.filter(function(d){return d.CountryName!="Whole World"})
@@ -575,11 +556,6 @@ function createBarcode(){
 
 	var barWidth = (barcodeWidth - barcodemarginDT[3] - gap) / 2;
 
-
-
-
-
-
 	barcodeHeight=parseInt(d3.select("#mapDiv").style("height"))-25;
 	barcodeWidth=parseInt(d3.select("#barcode").style("width"));
 
@@ -599,6 +575,7 @@ function createBarcode(){
     .tickSize(barcodeWidth)
 		.ticks(5);
 
+// y axis label
     barcodePlot.append("text").attr("font-size","14px").attr("y",13).text("£m")
 
 	barcodeArea = barcodePlot.append("g")
@@ -750,7 +727,7 @@ function createBarcode(){
 			})
 			.on("mouseout", function(){unhighlightcountry(this.id.slice(0, 2))});
 
-//axis label
+      //axis label
      barcodeArea.append("text").attr("font-size","14px").attr("x",chartWidth-100).attr("y",barcodeHeight/2+10).text("£m")
 	}
 
@@ -806,8 +783,6 @@ function fadeToFront1() {
 		.on("end", function() {
 
 		})
-
-
 } //end fadeToFront
 
 function fadeToFront2() {
@@ -823,8 +798,6 @@ function fadeToFront2() {
 	dupe.attr("stroke", "none")
 		.attr("paint-order",null)
 		.attr("stroke-width",null);
-
-
 } //end fadeToFront
 
 
@@ -869,6 +842,12 @@ function selectList() {
 
 					disableHoverEvents();
 
+          //GTM stuff here
+          dataLayer.push({
+            'event':'worldtrademap',
+            'countryselected':areacode
+          })
+
 			}
 
 	});
@@ -883,16 +862,25 @@ function selectList() {
 
 function disableHoverEvents() {
 
-	d3.select("#svgMap").style("pointer-events","none");
+	// d3.select("#svgMap").style("pointer-events","none");
+  d3.select("#svgMap").selectAll("path").on("mouseover","").on("mouseout","")
 	d3.select("#barcode").style("pointer-events","none");
 
-
-
-}; //enableHoverEvents
+}; //disableHoverEvents
 
 
 function enableHoverEvents() {
-	d3.select("#svgMap").style("pointer-events","auto");
+	// d3.select("#svgMap").style("pointer-events","auto");
+
+  d3.select("#svgMap").selectAll("path")
+  .on("mouseover",function(d){
+    highlightcountry(d.properties.fips);
+    filterdata(d.properties.fips);
+  })
+  .on("mouseout",function(d){
+      unhighlightcountry(d.properties.fips);
+      filterdata("W1");
+    })
 	d3.select("#barcode").style("pointer-events","auto");
 
 }; //enableHoverEvents
@@ -1394,9 +1382,30 @@ d3.select('#sparklineI').select("svg")
 .append('text')
 .attr("x",0)
 .attr("y",20)
+.attr("id","yearI")
 .text("5-year change")
 .style("font-size", "14px")
 .attr("font-family","'Open Sans', sans-serif");
+
+if(mobile == true){
+  d3.select('#sparklineI').select("svg").selectAll("#yearI").remove()
+  d3.select('#sparklineI').select("svg")
+  .append('text')
+  .attr("x",0)
+  .attr("y",20)
+  .attr("id","yearI")
+  .text("5-year")
+  .style("font-size", "14px")
+  .attr("font-family","'Open Sans', sans-serif");
+  d3.select('#sparklineI').select("svg")
+  .append('text')
+  .attr("x",0)
+  .attr("y",34)
+  .attr("id","yearI")
+  .text("change")
+  .style("font-size", "14px")
+  .attr("font-family","'Open Sans', sans-serif");
+}
 
 d3.select('#imports').select("svg")
 .append('text')
@@ -1410,9 +1419,30 @@ d3.select('#sparklineE').select("svg")
 .append('text')
 .attr("x",0)
 .attr("y",20)
+.attr("id","year")
 .text("5-year change")
 .style("font-size", "14px")
 .attr("font-family","'Open Sans', sans-serif");
+
+if(mobile==true){
+  d3.select('#sparklineE').select("svg").selectAll("#year").remove()
+  d3.select('#sparklineE').select("svg")
+  .append('text')
+  .attr("x",0)
+  .attr("y",20)
+  .attr("id","yearI")
+  .text("5-year")
+  .style("font-size", "14px")
+  .attr("font-family","'Open Sans', sans-serif");
+  d3.select('#sparklineE').select("svg")
+  .append('text')
+  .attr("x",0)
+  .attr("y",34)
+  .attr("id","yearI")
+  .text("change")
+  .style("font-size", "14px")
+  .attr("font-family","'Open Sans', sans-serif");
+}
 
 d3.select('#exports').select("svg")
 .append('text')
