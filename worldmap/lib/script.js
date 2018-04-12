@@ -88,7 +88,7 @@ function ready (error, dataexports, dataimports, geog){
         mouseWheelZoomEnabled: true,
         zoomScaleSensitivity: 0.3,
         minZoom: 0.4,
-        maxZoom: 5,
+        maxZoom: 7,
         fit: false,
         contain: false,
         center: false,
@@ -1046,7 +1046,11 @@ svgSparkI.append('g').attr("id","sparkyI").selectAll('path')
 		  {
 			"key": "1",
 			"value": [
-			  {
+        {
+         "date": "2011-01-01T00:00:00.000Z",
+         "amt": "0"
+        },
+        {
 				"date": "2012-01-01T00:00:00.000Z",
 				"amt": "0"
 			  },
@@ -1071,7 +1075,11 @@ svgSparkI.append('g').attr("id","sparkyI").selectAll('path')
 		  {
 			"key": "2",
 			"value": [
-			  {
+        {
+         "date": "2011-01-01T00:00:00.000Z",
+         "amt": "0"
+        },
+        {
 				"date": "2012-01-01T00:00:00.000Z",
 				"amt": "0"
 			  },
@@ -1096,7 +1104,11 @@ svgSparkI.append('g').attr("id","sparkyI").selectAll('path')
 		  {
 			"key": "3",
 			"value": [
-			  {
+        {
+         "date": "2011-01-01T00:00:00.000Z",
+         "amt": "0"
+        },
+        {
 				"date": "2012-01-01T00:00:00.000Z",
 				"amt": "0"
 			  },
@@ -1121,7 +1133,11 @@ svgSparkI.append('g').attr("id","sparkyI").selectAll('path')
 		  {
 			"key": "4",
 			"value": [
-			  {
+        {
+         "date": "2011-01-01T00:00:00.000Z",
+         "amt": "0"
+        },
+        {
 				"date": "2012-01-01T00:00:00.000Z",
 				"amt": "0"
 			  },
@@ -1146,7 +1162,11 @@ svgSparkI.append('g').attr("id","sparkyI").selectAll('path')
 		  {
 			"key": "5",
 			"value": [
-			  {
+        {
+         "date": "2011-01-01T00:00:00.000Z",
+         "amt": "0"
+        },
+        {
 				"date": "2012-01-01T00:00:00.000Z",
 				"amt": "0"
 			  },
