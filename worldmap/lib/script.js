@@ -19,11 +19,10 @@ function ready (error, dataexports, dataimports, geog){
   var margin = {top: 40, right: 15, bottom: 40, left: 15};
               //width = 960 - margin.left - margin.right,
               //height = 500 - margin.top - margin.bottom;
-
   width=parseInt(d3.select("body").style("width"))*0.75;
   height=width*0.58
 
-  mobileBreak = 600;
+  mobileBreak = 599;
 
   var path = d3.geoPath();
 
@@ -49,13 +48,13 @@ function ready (error, dataexports, dataimports, geog){
 	gradient.append("stop")
 	   .attr('class', 'start')
 	   .attr("offset", "0%")
-	   .attr("stop-color", "#B8860B")
+	   .attr("stop-color", colour_palette[0])
 	   .attr("stop-opacity", 1);
 
 	gradient.append("stop")
 	   .attr('class', 'end')
 	   .attr("offset", "100%")
-	   .attr("stop-color", "#D2376D")
+	   .attr("stop-color", colour_palette[1])
 	   .attr("stop-opacity", 1);
 
   var projection = d3.geoNaturalEarth1()
@@ -89,7 +88,7 @@ function ready (error, dataexports, dataimports, geog){
         mouseWheelZoomEnabled: true,
         zoomScaleSensitivity: 0.3,
         minZoom: 0.4,
-        maxZoom: 7,
+        maxZoom: 5,
         fit: false,
         contain: false,
         center: false,
@@ -300,7 +299,7 @@ svgSparkI.select('.ysparkI')
 svgSparkI.select('#sparkyI').selectAll('path')
         .data(d3.entries(newarrayI))
         .style("stroke",colour_palette[0])
-        .attr("transform",function(d,i){return "translate(0,"+(i*yImport.bandwidth())+")"})
+        .attr("transform",function(d,i){return "translate(0,"+(i*yImport.bandwidth()+3)+")"})
         .transition()
         .attr('d', function(d) {
             return lineI(d.value);
@@ -329,7 +328,7 @@ svgSparkE.select('.ysparkE')
 svgSparkE.select('#sparkyE').selectAll('path')
         .data(d3.entries(newarrayE))
         .style("stroke",colour_palette[1])
-                .attr("transform",function(d,i){return "translate(0,"+(i*yExport.bandwidth())+")"})
+                .attr("transform",function(d,i){return "translate(0,"+(i*yExport.bandwidth()+3)+")"})
         .transition()
         .attr('d', function(d) {
             return lineE(d.value);
@@ -532,7 +531,7 @@ function createBarcode(){
 
 	chartWidth=parseInt(d3.select("#chartsnsparks").style("width"));
 
-	if(chartWidth > mobileBreak) {
+	if(chartWidth > mobileBreak-16) {
 
 	mobile = false;
 
@@ -813,7 +812,7 @@ function selectList() {
 	// Build option menu for occupations
 	var optns = d3.select("#selectNav").append("div").attr("id","sel").append("select")
 		.attr("id","areaselect")
-		.attr("style","width:95%")
+		.attr("style","width:67%")
 		.attr("class","chosen-select");
 
 
@@ -906,6 +905,9 @@ if(mobile == false) {
 	height = height * 2;
 }
 
+if(mobile==true){
+  margin.left=2
+}
 
 x = d3.scaleLinear()
           .range([ 0, chartWidth - margin.left - margin.right]);
