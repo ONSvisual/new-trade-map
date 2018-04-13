@@ -19,6 +19,7 @@ function ready (error, dataexports, dataimports, geog){
   var margin = {top: 40, right: 15, bottom: 40, left: 15};
               //width = 960 - margin.left - margin.right,
               //height = 500 - margin.top - margin.bottom;
+  if(mobile==true){margin.left:8}            
   width=parseInt(d3.select("body").style("width"))*0.75;
   height=width*0.58
 
