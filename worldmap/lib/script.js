@@ -19,7 +19,7 @@ function ready (error, dataexports, dataimports, geog){
   var margin = {top: 40, right: 15, bottom: 40, left: 15};
               //width = 960 - margin.left - margin.right,
               //height = 500 - margin.top - margin.bottom;
-  if(mobile==true){margin.left:8}            
+
   width=parseInt(d3.select("body").style("width"))*0.75;
   height=width*0.58
 
@@ -201,12 +201,12 @@ for(var i=0;i<top5codesE.length;i++){
 
 perchangeI=[]
 for(var i=0;i<top5codesI.length;i++){
-    perchangeI[i]=(newarrayI[top5codesI[i]][top5codesI.length].amt-newarrayI[top5codesI[i]][0].amt)/newarrayI[top5codesI[i]][0].amt
+    perchangeI[i]=(newarrayI[top5codesI[i]][yearssorted.length-1].amt-newarrayI[top5codesI[i]][0].amt)/newarrayI[top5codesI[i]][0].amt
 }
 
 perchangeE=[]
 for(var i=0;i<top5codesE.length;i++){
-  perchangeE[i]=(newarrayE[top5codesE[i]][top5codesE.length].amt-newarrayE[top5codesE[i]][0].amt)/newarrayE[top5codesE[i]][0].amt
+  perchangeE[i]=(newarrayE[top5codesE[i]][yearssorted.length-1].amt-newarrayE[top5codesE[i]][0].amt)/newarrayE[top5codesE[i]][0].amt
 }
 
 //stuff for bar charts
