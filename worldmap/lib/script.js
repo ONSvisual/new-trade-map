@@ -29,7 +29,7 @@ function ready (error, dataexports, dataimports, geog){
   var svg = d3.select("#mapDiv")
               .append("svg")
 			  .attr("id","svgMap")
-              .attr("width", width)
+              .attr("width", width-20)
               .attr("height", height)
               .append('g')
               .attr('class', 'map');
