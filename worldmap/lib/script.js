@@ -606,7 +606,7 @@ function createBarcode(){
 			highlightcountry(this.id.slice(0, 2))
 			filterdata(this.id.slice(0, 2));
 		})
-		.on("mouseout", function(){unhighlightcountry(this.id.slice(0, 2))});
+		.on("mouseout", function(){unhighlightcountry(this.id.slice(0, 2)),filterdata("W1")});
 
 	barcodeArea.append("g")
 		.selectAll(".barcodeBarE")
@@ -631,7 +631,7 @@ function createBarcode(){
 			highlightcountry(this.id.slice(0, 2))
 			filterdata(this.id.slice(0, 2));
 		})
-		.on("mouseout", function(){unhighlightcountry(this.id.slice(0, 2))});
+		.on("mouseout", function(){unhighlightcountry(this.id.slice(0, 2)),filterdata("W1")});
 	} else {
 
 		mobile = true;
@@ -700,7 +700,7 @@ function createBarcode(){
 				highlightcountry(this.id.slice(0, 2))
 				filterdata(this.id.slice(0, 2));
 			})
-			.on("mouseout", function(){unhighlightcountry(this.id.slice(0, 2))});
+			.on("mouseout", function(){unhighlightcountry(this.id.slice(0, 2)),filterdata("W1")});
 
 		barcodeArea.append("g")
 			.selectAll(".barcodeBarE")
@@ -725,7 +725,7 @@ function createBarcode(){
 				highlightcountry(this.id.slice(0, 2))
 				filterdata(this.id.slice(0, 2));
 			})
-			.on("mouseout", function(){unhighlightcountry(this.id.slice(0, 2))});
+			.on("mouseout", function(){unhighlightcountry(this.id.slice(0, 2)),filterdata("W1")});
 
       //axis label
      barcodeArea.append("text").attr("font-size","14px").attr("x",chartWidth-100).attr("y",barcodeHeight/2+10).text("£m")
