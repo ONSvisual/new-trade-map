@@ -19,6 +19,11 @@ function ready (error, dataexports, dataimports, geog){
   var margin = {top: 40, right: 15, bottom: 40, left: 15};
               //width = 960 - margin.left - margin.right,
               //height = 500 - margin.top - margin.bottom;
+
+
+
+
+
   width=parseInt(d3.select("body").style("width"))*0.75;
   height=width*0.58
 
@@ -102,6 +107,29 @@ createBarcode();
 selectList();
 enableZoom();
 barChartInitial();
+checkUrl();
+
+//encode country into the url
+function checkUrl() {
+    urlLocal = window.location.href;
+    var urlcountry = urlLocal.split("#")[1];
+
+      if (urlcountry == undefined||urlcountry=='') {
+        //set the map to world view
+        filterdata("W1")
+      } else {
+        areacode=urlcountry;
+        filterdata(urlcountry)
+        highlightcountry(urlcountry)
+        disableHoverEvents();
+      }
+  }
+
+  function changeURL(country){
+     url = '#' + country;
+     window.location.href = url;
+     areacode=country;
+  };
 
 
 //gets the last year in the dataset
@@ -468,7 +496,6 @@ function highlightcountry(countrycode) {
 
     //Update labels
     d3.select("#tradewith").html("UK trade with " + countryname + " <span style='font-weight:300'>2016</span>")
-  // }
 
 } //end highlightcountry
 
@@ -476,7 +503,7 @@ function highlightcountry(countrycode) {
 
 function unhighlightcountry(countrycode) {
 
-	//update dropdown
+  //update dropdown
 	$("#areaselect").val("").trigger('change.select2');
 
 
@@ -485,7 +512,7 @@ function unhighlightcountry(countrycode) {
 	d3.selectAll(".highlights").remove();
 
   //Update labels
-  d3.select("#tradewith").html("Overall UK trade <span style='font-weight:300'>2016</span>")
+  d3.select("#tradewith").html("UK Trade in Goods <span style='font-weight:300'>2016</span>")
 
 	d3.select("#shape" + countrycode).classed("countries_highlights",false);
 
@@ -541,7 +568,7 @@ function createBarcode(){
         .append("div")
 		.attr("id","barcodelabels")
 		.attr("class","hidden-xs")
-		.html("<span style='font-weight:bold'>UK Trade</span> 2016")
+		.html("<span style='font-weight:bold'>Trade in goods</span> 2016")
 		.append("div")
         .style("padding-left",barcodemarginDT[3] + "px")
         .style("padding-right",barcodemarginDT[1] + "px")
@@ -839,7 +866,7 @@ function selectList() {
 
 					highlightcountry(areacode);
         	filterdata(areacode);
-
+          changeURL(areacode)
 					disableHoverEvents();
 
           //GTM stuff here
@@ -853,16 +880,15 @@ function selectList() {
 	});
 
 	$("#areaselect").on("select2:unselect", function (e) {
-					unhighlightcountry(areacode);
+          unhighlightcountry(areacode);
 					enableHoverEvents();
+          changeURL("")
 	});
 
 }; // end selectlist
 
 
 function disableHoverEvents() {
-
-	// d3.select("#svgMap").style("pointer-events","none");
   d3.select("#svgMap").selectAll("path").on("mouseover","").on("mouseout","")
 	d3.select("#barcode").style("pointer-events","none");
 
@@ -1254,9 +1280,19 @@ d3.select('#imports').select("svg")
 .append('text')
 .attr("x",margin.left)
 .attr("y",20)
-.html("Top 5 <tspan style='font-weight:bold'>import</tspan> goods")
+// .text("Top 5 import goods") Changed to nested tspans because of IE
+.append("tspan")
+.text("Top 5 ")
 .style("font-size", "14px")
-.attr("font-family","'Open Sans', sans-serif");
+.attr("font-family","'Open Sans', sans-serif")
+.append("tspan")
+.text("imports")
+.style("font-weight","bold")
+.append("tspan")
+.text(" goods")
+.style("font-weight","normal");
+
+
 
 d3.select('#sparklineE').select("svg")
 .append('text')
@@ -1291,9 +1327,17 @@ d3.select('#exports').select("svg")
 .append('text')
 .attr("x",margin.left)
 .attr("y",20)
-.html("Top 5 <tspan style='font-weight:bold'>export</tspan> goods")
+// .html("Top 5 <tspan style='font-weight:bold'>export</tspan> goods") Changed to nested tspans because of IE
+.append("tspan")
+.text("Top 5 ")
 .style("font-size", "14px")
-.attr("font-family","'Open Sans', sans-serif");
+.attr("font-family","'Open Sans', sans-serif")
+.append("tspan")
+.text("exports")
+.style("font-weight","bold")
+.append("tspan")
+.text(" goods")
+.style("font-weight","normal");
 
 
 pymChild.sendHeight();
@@ -1301,8 +1345,7 @@ pymChild.sendHeight();
 
 }// end BarchartInitial
 
-//set the map to world view initially
-filterdata("W1")
+
 
 //some code to stop select2 opening when clearing
 $('#areaselect').on('select2:unselecting', function(ev) {
