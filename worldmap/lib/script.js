@@ -20,7 +20,7 @@ function ready (error, dataexports, dataimports, geog){
               //width = 960 - margin.left - margin.right,
               //height = 500 - margin.top - margin.bottom;
 
-
+  var dvcyear = 2017
 
 
 
@@ -495,7 +495,7 @@ function highlightcountry(countrycode) {
     countryname = areanames[a]
 
     //Update labels
-    d3.select("#tradewith").html("UK trade with " + countryname + " <span style='font-weight:300'>2016</span>")
+    d3.select("#tradewith").html("UK trade with " + countryname + " <span style='font-weight:300'>"+dvcyear+"</span>")
 
 } //end highlightcountry
 
@@ -512,7 +512,7 @@ function unhighlightcountry(countrycode) {
 	d3.selectAll(".highlights").remove();
 
   //Update labels
-  d3.select("#tradewith").html("UK Trade in Goods <span style='font-weight:300'>2016</span>")
+  d3.select("#tradewith").html("UK Trade in Goods <span style='font-weight:300'>"+dvcyear+"</span>")
 
 	d3.select("#shape" + countrycode).classed("countries_highlights",false);
 
@@ -568,7 +568,7 @@ function createBarcode(){
         .append("div")
 		.attr("id","barcodelabels")
 		.attr("class","hidden-xs")
-		.html("<span style='font-weight:bold'>Trade in goods</span> 2016")
+		.html("<span style='font-weight:bold'>Trade in goods</span> "+dvcyear)
 		.append("div")
         .style("padding-left",barcodemarginDT[3] + "px")
         .style("padding-right",barcodemarginDT[1] + "px")
@@ -667,7 +667,7 @@ function createBarcode(){
 			.append("div")
 			.attr("id","barcodelabels")
 			.attr("class","hidden-sm")
-			.html("<span style='font-weight:bold'>UK Trade</span> 2016")
+			.html("<span style='font-weight:bold'>UK Trade</span> "+dvcyear)
 			.append("div")
 
 		barcodeLabels.append("div").attr("id","importlabel").attr("class","col-sm-6").html("<p>Imports</p>");
@@ -920,8 +920,9 @@ function enableZoom() {
 
 function barChartInitial() {
 //make a bar chart
-
 chartWidth=parseInt(d3.select("#chartsnsparks").style("width"));
+
+d3.select("#tradewith").html("Overall UK trade <span style='font-weight:300'>"+dvcyear+"</span>")
 
 if(mobile == false) {
 	chartWidth = (chartWidth*0.75)/2
