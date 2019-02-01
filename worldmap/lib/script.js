@@ -92,7 +92,7 @@ function ready (error, dataexports, dataimports, geog){
         dblClickZoomEnabled: true,
         mouseWheelZoomEnabled: true,
         zoomScaleSensitivity: 0.3,
-        minZoom: 0.4,
+        minZoom: 1,
         maxZoom: 5,
         fit: false,
         contain: false,
@@ -176,6 +176,24 @@ for (var column in latestcountrydataE[0]) {
     lastyeardataE.push(latestcountrydataE[0][column]);
 }
 
+
+alldata5=d3.zip(lastyeardataI, variables).sort(function(a,b){return d3.descending(+a[0],+b[0])}).slice(0,5)
+console.log(alldata5)
+
+exportsdata5=d3.zip(lastyeardataE, variables).sort(function(a,b){return d3.descending(+a[0],+b[0])}).slice(0,5)
+console.log(exportsdata5)
+
+
+
+
+exportsdata5.forEach(function(d){
+for (var i=0; i< exportsdata5.length; i++ ){
+  for (var j=0; j<exportsdata5[i].length; j++){
+    // console.log(exportsdata5[i][0], i , j)
+  }
+};
+})
+
 //zip the data with list of variables, sort it descending, then take top 5
 zippeddataI=d3.zip(lastyeardataI,variables).sort(function(a,b){return d3.descending(+a[0],+b[0]);}).slice(0,5)
 
@@ -242,6 +260,7 @@ for (var i=0;i<top5codesI.length;i++){
   barsI.push({'name':top5codesI[i],'amt':+latestcountrydataI[0][top5codesI[i]]})
 }
 
+
 barsE = []
 for (var i=0;i<top5codesE.length;i++){
   barsE.push({'name':top5codesE[i],'amt':+latestcountrydataE[0][top5codesE[i]]})
@@ -271,21 +290,43 @@ yImport.domain(top5codesI);
 svgBarI.select('.y')
       .call(yAxisImport);
 
+d3.select("#importsChart").select("g.y.axis").selectAll(".tick").attr("class", function(d,i){ return "tick tick"+i})
+
+
 svgBarI.selectAll(".barsI").selectAll('rect')
     .data(barsI)
     .transition()
     .attr("y", function(d){return yImport(d.name)})
-    .attr("width", function(d){return x(d.amt)})
+    .attr("width", function(d){ return x(d.amt)})
     .attr("height", yImport.bandwidth()/3)
+
+    alldata5.forEach(function(d){
+    for (var i=0; i< alldata5.length; i++ ){
+      // for (var j=0; j<alldata5[i].length; j++){
+        if ( +alldata5[i][0] < 1 || +alldata5[i][0] == NaN ||+alldata5[i][0] == ".."){
+           console.log(i)
+           d3.select("#importsChart").select("g.y.axis").select("g.tick" + [i]).select("text").text(function(d,i){ console.log(d, i); return  "No data available"})
+
+          // d3.select("#importsChart").select("g.y.axis").select("g.tick" + [i]).select("text").remove();
+          // d3.select("#importsChart").select("g.y.axis").selectAll("g.tick"+[i]).append("text").attr("x","-9").attr("class", "tick no_data").text(function(d,i){ console.log(d, i); return  "No data available"})
+
+    };
+    }
+  })
+
+
 
 svgBarE.select(".x")
     .transition()
-	.call(xAxis);
+	  .call(xAxis);
 
 yExport.domain(top5codesE);
 
 svgBarE.select('.y')
       .call(yAxisExport);
+
+
+d3.select("#exportsChart").select("g.y.axis").selectAll(".tick").attr("class", function(d,i){ return "tick tick"+i})
 
 svgBarE.selectAll(".barsE").selectAll('rect')
     .data(barsE)
@@ -303,85 +344,21 @@ d3.selectAll(".y text")
     .attr("paint-order","stroke")
 	//.each(fadeToFront2);
 
+  //Remove ticks on exports chart when data is less than 1
+  exportsdata5.forEach(function(d){
+  for (var i=0; i< exportsdata5.length; i++ ){
+    // for (var j=0; j<alldata5[i].length; j++){
+      if ( +exportsdata5[i][0] < 1 || +exportsdata5[i][0] == NaN || +exportsdata5[i][0] == ".."){
+         console.log(i)
+        d3.select("#exportsChart").select("g.y.axis").select("g.tick" + [i]).select("text").text(function(d,i){ console.log(d, i); return  "No data available"})
 
-//sparkline stuff Imports
+        // d3.select("#exportsChart").select("g.y.axis").select("g.tick" + [i]).select("text").remove();
+        // d3.select("#exportsChart").select("g.y.axis").selectAll("g.tick"+[i]).append("text").attr("x","9").attr("class", "tick no_data").text(function(d,i){ console.log(d, i); return  "No data available"})
 
-ysparkI.domain([d3.min(d3.entries(newarrayI),function(c){
-                  return d3.min(c.value, function(v){
-                    var n = v.amt;
-                    return Math.floor(n);
-                  })
-                })
-                ,
-                d3.max(d3.entries(newarrayI), function(c) {
-									return d3.max(c.value, function(v) {
-										var n = v.amt;
-										return Math.ceil(n);
-									});
-								})])
+  };
+  }
+})
 
-svgSparkI.select('.ysparkI')
-        .transition()
-        .call(yAxisSpark).select(".domain").remove();
-
-svgSparkI.select('#sparkyI').selectAll('path')
-        .data(d3.entries(newarrayI))
-        .style("stroke",colour_palette[0])
-        .attr("transform",function(d,i){return "translate(0,"+(i*yImport.bandwidth()+3)+")"})
-        .transition()
-        .attr('d', function(d) {
-            return lineI(d.value);
-        });
-
-//sparkline stuff Exports
-
-ysparkE.domain([d3.min(d3.entries(newarrayE),function(c){
-                  return d3.min(c.value, function(v){
-                    var n = v.amt;
-                    return Math.floor(n);
-                  })
-                })
-                ,
-                d3.max(d3.entries(newarrayE), function(c) {
-									return d3.max(c.value, function(v) {
-										var n = v.amt;
-										return Math.ceil(n);
-									});
-								})])
-
-svgSparkE.select('.ysparkE')
-        .transition()
-        .call(yAxisSpark).select(".domain").remove();
-
-svgSparkE.select('#sparkyE').selectAll('path')
-        .data(d3.entries(newarrayE))
-        .style("stroke",colour_palette[1])
-                .attr("transform",function(d,i){return "translate(0,"+(i*yExport.bandwidth()+3)+")"})
-        .transition()
-        .attr('d', function(d) {
-            return lineE(d.value);
-        });
-
-//do percentage change for each
-  d3.select(".perchangeI").selectAll('text')
-  .data(perchangeI)
-  .attr('x',3*width/48)
-  .attr('y',function(d,i){return yImport.bandwidth()*i+yImport.bandwidth()/2})
-  .attr("text-anchor", "start")
-  .style("font-size", "12px")
-  .style("fill", "#666")
-  .transition()
-  .text(function(d){if(isFinite(d) == true){return d3.format(",.0%")(d)} else {return "-"}});
-
-d3.select(".perchangeE").selectAll('text')
-  .data(perchangeE)
-  .attr('x',3*width/48)
-  .attr('y',function(d,i){return yExport.bandwidth()*i+yExport.bandwidth()/2})
-  .attr("text-anchor", "start")
-  .style("font-size", "12px")
-  .style("fill", "#666")
-  .transition()
-  .text(function(d){if(isFinite(d) == true){return d3.format(",.0%")(d)} else {return "-"}});
 
 }//end filterdata
 
@@ -495,13 +472,13 @@ function highlightcountry(countrycode) {
     countryname = areanames[a]
 
     //Update labels
-    d3.select("#tradewith").html("UK trade with " + countryname + " <span style='font-weight:300'>"+dvcyear+"</span>")
+    d3.select("#tradewith").html("UK Trade with " + countryname + " <span style='font-weight:300'>"+dvcyear+"</span>")
 
 } //end highlightcountry
 
 
 
-function unhighlightcountry(countrycode) {
+function unhighlightcountry(countrycode, filterdata, code) {
 
   //update dropdown
 	$("#areaselect").val("").trigger('change.select2');
@@ -512,7 +489,7 @@ function unhighlightcountry(countrycode) {
 	d3.selectAll(".highlights").remove();
 
   //Update labels
-  d3.select("#tradewith").html("UK Trade in Goods <span style='font-weight:300'>"+dvcyear+"</span>")
+  d3.select("#tradewith").html("UK Trade in Services <span style='font-weight:300'>"+dvcyear+"</span>")
 
 	d3.select("#shape" + countrycode).classed("countries_highlights",false);
 
@@ -568,7 +545,7 @@ function createBarcode(){
         .append("div")
 		.attr("id","barcodelabels")
 		.attr("class","hidden-xs")
-		.html("<span style='font-weight:bold'>Trade in goods</span> "+dvcyear)
+		.html("<span style='font-weight:bold'>Trade in services</span> "+dvcyear)
 		.append("div")
         .style("padding-left",barcodemarginDT[3] + "px")
         .style("padding-right",barcodemarginDT[1] + "px")
@@ -922,7 +899,7 @@ function barChartInitial() {
 //make a bar chart
 chartWidth=parseInt(d3.select("#chartsnsparks").style("width"));
 
-d3.select("#tradewith").html("Overall UK trade <span style='font-weight:300'>"+dvcyear+"</span>")
+d3.select("#tradewith").html("UK Trade in services <span style='font-weight:300'>"+dvcyear+"</span>")
 
 if(mobile == false) {
 	chartWidth = (chartWidth*0.75)/2
@@ -1023,204 +1000,6 @@ xAxis = d3.axisBottom(x)
 d3.selectAll(".y text").attr("x", 5);
 
 
-//here be some stuff for making sparklines
-xspark = d3.scaleTime()
-    .range([0, chartWidth/12]);
-
-
-ysparkI = d3.scaleLinear()
-    .range([yImport.bandwidth()*2/15,0])
-
-ysparkE = d3.scaleLinear()
-    .range([yExport.bandwidth()*2/15,0])
-
-xspark.domain([d3.timeParse("%Y")(yearssorted[0]),d3.timeParse("%Y")(yearssorted[yearssorted.length-1])])
-
-ysparkI.domain([0,100000])
-ysparkE.domain([0,100000])
-
-xAxisSpark = d3.axisBottom(xspark).tickFormat("").tickSize(0)
-yAxisSpark = d3.axisLeft(ysparkI).tickFormat("").tickSize(0)
-
-//function to make a line
-lineI = d3.line()
-    .x(function(d) { return xspark(d.date); })
-    .y(function(d) { return ysparkI(d.amt); });
-
-//function to make a line
-lineE = d3.line()
-    .x(function(d) { return xspark(d.date); })
-    .y(function(d) { return ysparkE(d.amt); });
-
-
-svgSparkI = d3.select("#sparklineI")
-              .append('svg')
-              .attr("id","sparkchartI")
-              //.style("background-color","#fff")
-							.attr("width", chartWidth/3)
-							.attr("height", height/2 + margin.top + margin.bottom )  //+30)
-							.append("g")
-              .attr("transform", "translate(" + 2 + "," + margin.top + ")");
-
-
-svgSparkI.append('g')
-		.attr('class', 'ysparkI axis')
-		.call(yAxisSpark).select(".domain").remove();
-
-svgSparkI.append('g')
-		.attr('class', 'xspark axis')
-		.call(xAxisSpark).select(".domain").remove();
-
-svgSparkI.append('g').attr("id","sparkyI").selectAll('path')
-		.data([
-		  {
-			"key": "1",
-			"value": [
-			  {
-				"date": "2016-01-01T00:00:00.000Z",
-				"amt": "0"
-			  }
-			]
-		  },
-		  {
-			"key": "2",
-			"value": [
-			  {
-				"date": "2016-01-01T00:00:00.000Z",
-				"amt": "0"
-			  }
-			]
-		  },
-		  {
-			"key": "3",
-			"value": [
-			  {
-				"date": "2016-01-01T00:00:00.000Z",
-				"amt": "0"
-			  }
-			]
-		  },
-		  {
-			"key": "4",
-			"value": [
-			  {
-				"date": "2016-01-01T00:00:00.000Z",
-				"amt": "0"
-			  }
-			]
-		  },
-		  {
-			"key": "5",
-			"value": [
-			  {
-				"date": "2016-01-01T00:00:00.000Z",
-				"amt": "0"
-			  }
-			]
-		  }
-		]
-	 )
-		.enter()
-  .append('path')
-  .style("fill", 'none')
-			.style("stroke-width", 2)
-			.style("stroke-linecap", 'round')
-			.style("stroke-linejoin", 'round')
-  .attr('d', function(d) {
-	  return lineI(d.value);
-  });
-
-
-svgSparkE = d3.select("#sparklineE")
-              .append('svg')
-              .attr("id","sparkchartE")
-              //.style("background-color","#fff")
-							.attr("width", chartWidth/3)
-							.attr("height", height/2 + margin.top + margin.bottom )  //+30)
-							.append("g")
-              .attr("transform", "translate(" + 2 + "," + margin.top + ")");
-
-
-svgSparkE.append('g')
-		.attr('class', 'ysparkE axis')
-		.call(yAxisSpark).select(".domain").remove();
-
-svgSparkE.append('g')
-		.attr('class', 'xspark axis')
-		.call(xAxisSpark).select(".domain").remove();
-
-svgSparkE.append('g').attr("id","sparkyE").selectAll('path')
-		.data([
-		  {
-			"key": "1",
-			"value": [
-			  {
-				"date": "2016-01-01T00:00:00.000Z",
-				"amt": "0"
-			  }
-			]
-		  },
-		  {
-			"key": "2",
-			"value": [
-			  {
-				"date": "2016-01-01T00:00:00.000Z",
-				"amt": "0"
-			  }
-			]
-		  },
-		  {
-			"key": "3",
-			"value": [
-			  {
-				"date": "2016-01-01T00:00:00.000Z",
-				"amt": "0"
-			  }
-			]
-		  },
-		  {
-			"key": "4",
-			"value": [
-			  {
-				"date": "2016-01-01T00:00:00.000Z",
-				"amt": "0"
-			  }
-			]
-		  },
-		  {
-			"key": "5",
-			"value": [
-			  {
-				"date": "2016-01-01T00:00:00.000Z",
-				"amt": "0"
-			  }
-			]
-		  }
-		]
-	 )
-		.enter()
-  .append('path')
-  .style("fill", 'none')
-  .style("stroke-width", 2)
-  .style("stroke-linecap", 'round')
-  .style("stroke-linejoin", 'round')
-  .attr('d', function(d) {
-	  return lineE(d.value);
-  });
-
-
-
-    d3.select("#sparklineI").select('svg')
-    .append('g')
-    .attr('class','perchangeI')
-    .attr("transform", "translate(" + 12 + "," + margin.top + ")");
-
-
-    d3.select("#sparklineE").select('svg')
-    .append('g')
-    .attr('class','perchangeE')
-    .attr("transform", "translate(" + 12 + "," + margin.top + ")");
-
 //things for percentage change
 dummyarrayfortext=[1,2,3,4,5]
 
@@ -1247,98 +1026,38 @@ dummyarrayfortext.forEach(function(d,i){
         .attr("font-family","'Open Sans', sans-serif")
         .text("");
       })
+      d3.select('#imports').select("svg")
+      .append('text')
+      .attr("x",margin.left)
+      .attr("y",20)
+      // .text("Top 5 import goods") Changed to nested tspans because of IE
+      .append("tspan")
+      .text("Top 5 ")
+      .style("font-size", "14px")
+      .attr("font-family","'Open Sans', sans-serif")
+      .append("tspan")
+      .text("imports ")
+      .style("font-weight","bold")
+      .append("tspan")
+      .text(" services")
+      .style("font-weight","normal");
 
-d3.select('#sparklineI').select("svg")
-.append('text')
-.attr("x",0)
-.attr("y",20)
-.attr("id","yearI")
-.text("5-year change")
-.style("font-size", "14px")
-.attr("font-family","'Open Sans', sans-serif");
+      d3.select('#exports').select("svg")
+      .append('text')
+      .attr("x",margin.left)
+      .attr("y",20)
+      // .html("Top 5 <tspan style='font-weight:bold'>export</tspan> goods") Changed to nested tspans because of IE
+      .append("tspan")
+      .text("Top 5 ")
+      .style("font-size", "14px")
+      .attr("font-family","'Open Sans', sans-serif")
+      .append("tspan")
+      .text("exports ")
+      .style("font-weight","bold")
+      .append("tspan")
+      .text(" services")
+      .style("font-weight","normal");
 
-if(mobile == true){
-  d3.select('#sparklineI').select("svg").selectAll("#yearI").remove()
-  d3.select('#sparklineI').select("svg")
-  .append('text')
-  .attr("x",0)
-  .attr("y",20)
-  .attr("id","yearI")
-  .text("5-year")
-  .style("font-size", "14px")
-  .attr("font-family","'Open Sans', sans-serif");
-  d3.select('#sparklineI').select("svg")
-  .append('text')
-  .attr("x",0)
-  .attr("y",34)
-  .attr("id","yearI")
-  .text("change")
-  .style("font-size", "14px")
-  .attr("font-family","'Open Sans', sans-serif");
-}
-
-d3.select('#imports').select("svg")
-.append('text')
-.attr("x",margin.left)
-.attr("y",20)
-// .text("Top 5 import goods") Changed to nested tspans because of IE
-.append("tspan")
-.text("Top 5 ")
-.style("font-size", "14px")
-.attr("font-family","'Open Sans', sans-serif")
-.append("tspan")
-.text("imports")
-.style("font-weight","bold")
-.append("tspan")
-.text(" goods")
-.style("font-weight","normal");
-
-
-
-d3.select('#sparklineE').select("svg")
-.append('text')
-.attr("x",0)
-.attr("y",20)
-.attr("id","year")
-.text("5-year change")
-.style("font-size", "14px")
-.attr("font-family","'Open Sans', sans-serif");
-
-if(mobile==true){
-  d3.select('#sparklineE').select("svg").selectAll("#year").remove()
-  d3.select('#sparklineE').select("svg")
-  .append('text')
-  .attr("x",0)
-  .attr("y",20)
-  .attr("id","yearI")
-  .text("5-year")
-  .style("font-size", "14px")
-  .attr("font-family","'Open Sans', sans-serif");
-  d3.select('#sparklineE').select("svg")
-  .append('text')
-  .attr("x",0)
-  .attr("y",34)
-  .attr("id","yearI")
-  .text("change")
-  .style("font-size", "14px")
-  .attr("font-family","'Open Sans', sans-serif");
-}
-
-d3.select('#exports').select("svg")
-.append('text')
-.attr("x",margin.left)
-.attr("y",20)
-// .html("Top 5 <tspan style='font-weight:bold'>export</tspan> goods") Changed to nested tspans because of IE
-.append("tspan")
-.text("Top 5 ")
-.style("font-size", "14px")
-.attr("font-family","'Open Sans', sans-serif")
-.append("tspan")
-.text("exports")
-.style("font-weight","bold")
-.append("tspan")
-.text(" goods")
-.style("font-weight","normal");
 
 
 pymChild.sendHeight();
