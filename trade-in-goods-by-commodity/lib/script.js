@@ -281,8 +281,8 @@ svgBarI.selectAll(".barsI").selectAll('rect')
 d3.select("#importsChart").select("g.y.axis").selectAll(".tick").attr("class", function(d,i){ return "tick tick"+i})
 
 zippeddataI.forEach(function(d){
-  for (var i=0; i< alldata5.length; i++ ){
-    if ( +alldata5[i][0] < 1 || +alldata5[i][0] == NaN ||+alldata5[i][0] == ".."){
+  for (var i=0; i< zippeddataI.length; i++ ){
+    if ( +zippeddataI[i][0] < 1 || +zippeddataI[i][0] == NaN ||+zippeddataI[i][0] == ".."){
        d3.select("#importsChart").select("g.y.axis").select("g.tick" + [i]).select("text").text(function(d,i){ console.log(d, i); return  "No data available"})
      };
     }
@@ -307,8 +307,8 @@ svgBarE.selectAll(".barsE").selectAll('rect')
 d3.select("#exportsChart").select("g.y.axis").selectAll(".tick").attr("class", function(d,i){ return "tick tick"+i})
 
 zippeddataE.forEach(function(d){
-  for (var i=0; i< exportsdata5.length; i++ ){
-    if ( +exportsdata5[i][0] < 1 || +exportsdata5[i][0] == NaN || +exportsdata5[i][0] == ".."){
+  for (var i=0; i< zippeddataE.length; i++ ){
+    if ( +zippeddataE[i][0] < 1 || +zippeddataE[i][0] == NaN || +zippeddataE[i][0] == ".."){
       d3.select("#exportsChart").select("g.y.axis").select("g.tick" + [i]).select("text").text(function(d,i){ console.log(d, i); return  "No data available"})
     };
   }
