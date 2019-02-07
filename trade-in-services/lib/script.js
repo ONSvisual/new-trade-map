@@ -300,19 +300,12 @@ svgBarI.selectAll(".barsI").selectAll('rect')
     .attr("width", function(d){ return x(d.amt)})
     .attr("height", yImport.bandwidth()/3)
 
-    alldata5.forEach(function(d){
-    for (var i=0; i< alldata5.length; i++ ){
-      // for (var j=0; j<alldata5[i].length; j++){
-        if ( +alldata5[i][0] < 1 || +alldata5[i][0] == NaN ||+alldata5[i][0] == ".."){
+    for (var i=0; i< zippeddataI.length; i++ ){
+        if ( +zippeddataI[i][0] < 1 || +zippeddataI[i][0] == NaN ||+zippeddataI[i][0] == ".."){
            console.log(i)
            d3.select("#importsChart").select("g.y.axis").select("g.tick" + [i]).select("text").text(function(d,i){ console.log(d, i); return  "No data available"})
-
-          // d3.select("#importsChart").select("g.y.axis").select("g.tick" + [i]).select("text").remove();
-          // d3.select("#importsChart").select("g.y.axis").selectAll("g.tick"+[i]).append("text").attr("x","-9").attr("class", "tick no_data").text(function(d,i){ console.log(d, i); return  "No data available"})
-
-    };
+         };
     }
-  })
 
 
 
@@ -345,19 +338,12 @@ d3.selectAll(".y text")
 	//.each(fadeToFront2);
 
   //Remove ticks on exports chart when data is less than 1
-  exportsdata5.forEach(function(d){
-  for (var i=0; i< exportsdata5.length; i++ ){
-    // for (var j=0; j<alldata5[i].length; j++){
-      if ( +exportsdata5[i][0] < 1 || +exportsdata5[i][0] == NaN || +exportsdata5[i][0] == ".."){
+  for (var i=0; i< zippeddataE.length; i++ ){
+      if ( +zippeddataE[i][0] < 1 || +zippeddataE[i][0] == NaN || +zippeddataE[i][0] == ".."){
          console.log(i)
         d3.select("#exportsChart").select("g.y.axis").select("g.tick" + [i]).select("text").text(function(d,i){ console.log(d, i); return  "No data available"})
-
-        // d3.select("#exportsChart").select("g.y.axis").select("g.tick" + [i]).select("text").remove();
-        // d3.select("#exportsChart").select("g.y.axis").selectAll("g.tick"+[i]).append("text").attr("x","9").attr("class", "tick no_data").text(function(d,i){ console.log(d, i); return  "No data available"})
-
   };
   }
-})
 
 
 }//end filterdata
