@@ -6,13 +6,14 @@ var pymChild = new pym.Child();
           .defer(d3.csv, "exports.csv")
           .defer(d3.csv, "imports.csv")
           .defer(d3.json, "geo/worldjson8.json")
+          .defer(d3.json, "geo/disputed.json")
           .await(ready);
 
 //remove fallback image
 d3.select("#fallback").remove();
 
 
-function ready (error, dataexports, dataimports, geog){
+function ready (error, dataexports, dataimports, geog,disputed){
 
   colour_palette =["#766FAF","#0F8243"]
 
@@ -84,6 +85,14 @@ function ready (error, dataexports, dataimports, geog){
 		unhighlightcountry(d.properties.fips);
         filterdata("W1");
       })
+
+  svg.append("g")
+        .attr("class","disputed")
+        .selectAll("path")
+        .data(topojson.feature(disputed,disputed.objects.ne_50m_admin_0_boundary_lines_disputed_areas).features)
+        .enter().append("path")
+        .attr("class","disputed")
+        .attr("d",path)
 
 	  var m = svgPanZoom("#svgMap", {
         panEnabled: true,
