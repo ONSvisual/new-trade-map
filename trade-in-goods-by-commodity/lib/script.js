@@ -282,7 +282,7 @@ d3.select("#importsChart").select("g.y.axis").selectAll(".tick").attr("class", f
 
   for (var i=0; i< zippeddataI.length; i++ ){
     if ( +zippeddataI[i][0] < 1 || +zippeddataI[i][0] == NaN ||+zippeddataI[i][0] == ".."){
-       d3.select("#importsChart").select("g.y.axis").select("g.tick" + [i]).select("text").text(function(d,i){ console.log(d, i); return  "No data available"})
+       d3.select("#importsChart").select("g.y.axis").select("g.tick" + [i]).select("text").text(function(d,i){ return  "No data available"})
      };
     }
 
@@ -306,7 +306,7 @@ d3.select("#exportsChart").select("g.y.axis").selectAll(".tick").attr("class", f
 
   for (var i=0; i< zippeddataE.length; i++ ){
     if ( +zippeddataE[i][0] < 1 || +zippeddataE[i][0] == NaN || +zippeddataE[i][0] == ".."){
-      d3.select("#exportsChart").select("g.y.axis").select("g.tick" + [i]).select("text").text(function(d,i){ console.log(d, i); return  "No data available"})
+      d3.select("#exportsChart").select("g.y.axis").select("g.tick" + [i]).select("text").text(function(d,i){ return  "No data available"})
     };
   }
 
@@ -455,7 +455,7 @@ function getCentroids() {
 function highlightcountry(countrycode) {
 
     //Update dropdown
-    $("#areaselect").val(countrycode).trigger('change.select2');
+    $("#areaselect").val(countrycode).trigger('chosen:updated');
 
     //Draw barcode highlight rects on top of all bars
     if(mobile == false) {
@@ -521,7 +521,7 @@ function highlightcountry(countrycode) {
 function unhighlightcountry(countrycode) {
 
   //update dropdown
-	$("#areaselect").val("").trigger('change.select2');
+	$("#areaselect").val("").trigger('chosen:updated');
 
 
 	d3.select("#shape" + countrycode).classed("countries_highlights",false);
@@ -857,7 +857,8 @@ function selectList() {
 	var optns = d3.select("#selectNav").append("div").attr("id","sel").append("select")
 		.attr("id","areaselect")
 		.attr("style","width:67%")
-		.attr("class","chosen-select");
+		.attr("class","chosen-select")
+    .attr('data-placeholder',"Choose a trading partner");
 
 
 	optns.append("option")
@@ -869,7 +870,7 @@ function selectList() {
 
 	myId=null;
 
- 	$('#areaselect').select2({placeholder:"Choose a trading partner",allowClear:true,dropdownParent:$('#sel')})
+ 	$('#areaselect').chosen({allow_single_deselect:true,no_results_text:"No results found for:"})
 
 	$('#areaselect').on('change',function(){
 
@@ -892,16 +893,13 @@ function selectList() {
             'countryselected':areacode
           })
 
-			}
+			}else{
+        unhighlightcountry(areacode);
+        enableHoverEvents();
+        changeURL("")
+      }
 
 	});
-
-	$("#areaselect").on("select2:unselect", function (e) {
-          unhighlightcountry(areacode);
-					enableHoverEvents();
-          changeURL("")
-	});
-
 }; // end selectlist
 
 
@@ -1366,16 +1364,16 @@ pymChild.sendHeight();
 
 
 //some code to stop select2 opening when clearing
-$('#areaselect').on('select2:unselecting', function(ev) {
-    if (ev.params.args.originalEvent) {
-        // When unselecting (in multiple mode)
-        ev.params.args.originalEvent.stopPropagation();
-    } else {
-        // When clearing (in single mode)
-        $(this).one('select2:opening', function(ev) { ev.preventDefault(); });
-        filterdata("W1")//set the it back to world view
-    }
-});
+// $('#areaselect').on('select2:unselecting', function(ev) {
+//     if (ev.params.args.originalEvent) {
+//         // When unselecting (in multiple mode)
+//         ev.params.args.originalEvent.stopPropagation();
+//     } else {
+//         // When clearing (in single mode)
+//         $(this).one('select2:opening', function(ev) { ev.preventDefault(); });
+//         filterdata("W1")//set the it back to world view
+//     }
+// });
 
 
 }//end ready
