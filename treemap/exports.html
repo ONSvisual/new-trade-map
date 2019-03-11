@@ -17,8 +17,8 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1, maximum-scale=1, user-scalable=no" />
     <meta http-equiv="content-type" content="text/html; charset=utf-8" />
-<link rel="stylesheet" href="css/styles.css" media="screen">
-  <link href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.6-rc.0/css/select2.min.css" rel="stylesheet" />
+    <link rel="stylesheet" href="css/styles.css" media="screen"/>
+    <link rel="stylesheet" href="css/chosen.css"/>
 
 <style>
 body{
@@ -312,11 +312,6 @@ hr {
 	z-index:1;
 }
 
-.select2-container--default .select2-selection--single{
-	border-color: #d3d3d3!important;
-}
-
-
 	.y text, .x text{
 		font-size: 12px;
 		fill:"#666";
@@ -398,96 +393,16 @@ hr {
     padding-right: 0px !important;
   }
 
-/*  SELECT DROPBOX */
-.select2-dropdown {
-  border: 1px solid #FF9933;
-}
+  #selectNav input[type="text"]:focus {
+  outline: 3px solid #FFA23A !important;
+  outline-offset: 0px !important; }
 
-.select2-search__field{
-  border: 1px solid #FF9933!important;
-}
+  input.chosen-search-input {
+  text-align: left !important;
+  height: 40px;
+  text-align: right;
+  padding-right: 5px !important; }
 
-.select2-container--default .select2-selection--single {
-    background-color: #EDEDED!important;
-    border: none!important;
-    border-radius: 0px!important;
-}
-
-.select2-container .select2-selection--single {
-    height: 36px!important;
-}
-
-.select2-container--default .select2-selection--single .select2-selection__placeholder {
-    color: #4A494B!important;
-}
-
-.select2-container--default .select2-selection--single .select2-selection__rendered {
-    line-height: 36px!important;
-}
-
-.select2-dropdown.select2-dropdown--below{
-      /* width: 148px !important; */
-}
-
-.select2-container--default .select2-selection--single{
-    /* padding:6px; */
-    /* height: 37px; */
-    /* width: 148px; */
-    /* font-size: 1.2em; */
-    position: relative;
-}
-
-.select2-container--default .select2-selection--single .select2-selection__arrow {
-    background-image: -khtml-gradient(linear, left top, left bottom, from(#3b7a9e), to(#3b7a9e));
-    background-image: -moz-linear-gradient(top, #3b7a9e, #3b7a9e);
-    background-image: -ms-linear-gradient(top, #3b7a9e, #3b7a9e);
-    background-image: -webkit-gradient(linear, left top, left bottom, color-stop(0%, #3b7a9e), color-stop(100%, #3b7a9e));
-    background-image: -webkit-linear-gradient(top, #3b7a9e, #3b7a9e);
-    background-image: -o-linear-gradient(top, #3b7a9e, #3b7a9e);
-    background-image: linear-gradient(#3b7a9e, #3b7a9e);
-    /* width: 40px; */
-    /* color: #fff; */
-    /* font-size: 1.3em; */
-    padding: 0px 6px;
-    /* height: 27px; */
-    position: absolute;
-    top: 0px;
-    right: 0px;
-    /* width: 20px; */
-}
-
-/*.select2-container--default .select2-selection--single .select2-selection__rendered {
-  line-height: 25px !important;
-}*/
-
-.select2-selection__arrow b {
-  border-color: white transparent transparent transparent !important;
-  border-width: 7px 6px 0px 6px !important;
-  left: 48% !important;
-  top: 45% !important;
-}
-
-.select2-selection__clear {
-  padding-right: 15px !important;
-  color: #3b7a9e !important;
-  font-size: 25px !important;
-  line-height: 24px !important;
-
-}
-
-
-.select2-container--default .select2-selection--single .select2-selection__arrow {
-    height: 36px!important;
-    width: 36px!important;
-}
-
-.select2-selection__clear {
-    padding-right: 25px !important;
-    color: #3b7a9e !important;
-    font-size: 36px !important;
-    line-height: 35px !important;
-}
-/*  SELECT DROPBOX END */
 </style>
 
 
@@ -555,14 +470,14 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
        </div>
 </div><!--end of .container-fluid-->
 
-<script src="https://cdn.ons.gov.uk/vendor/jquery/1.12.4/jquery.min.js"></script>
+<script src="https://cdn.ons.gov.uk/vendor/jquery/2.1.4/jquery.min.js"></script>
 <script src="js/modernizr.custom.56904.js"></script>
 <script src="https://cdn.ons.gov.uk/vendor/bootstrap/3.3.7/js/bootstrap.min.js" charset="utf-8"></script>
 <script src="https://cdn.ons.gov.uk/vendor/pym/1.3.2/pym.js" charset="utf-8"></script>
 <script src="js/base.js" charset="utf-8"></script>
 <script src="js/DataStructures.Tree.js" charset="utf-8"></script>
 <script src="https://cdn.ons.gov.uk/vendor/d3/3.5.17/d3.min.js" charset="utf-8"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.6-rc.0/js/select2.min.js"></script>
+<script src="js/chosen.jquery.js" type="text/javascript"></script>
 
 
 
@@ -647,7 +562,8 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
 			var optns = d3.select("#selectNav").append("div").attr("id","sel").append("select")
 				.attr("id","areaselect")
 				.attr("style","width:98%")
-				.attr("class","chosen-select");
+				.attr("class","chosen-select")
+        .attr('data-placeholder',"Total");;
 
 			optns.append("option")
 				// .attr("value","first")
@@ -660,7 +576,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
 				.html(function(d){ return d.name});
 
 
-			 $('#areaselect').select2({placeholder:"Total",/*allowClear:true,*/dropdownParent:$('#sel')})
+			 $('#areaselect').chosen({allow_single_deselect:true})
 
 			 //$('#areaselect').on('input',function(){console.log("click")})
 
@@ -678,7 +594,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
 							hierarchy.push(d)
 						}
 					})
-					//console.log(hierarchy);
+					// console.log(hierarchy);
 					storyArray = hierarchy;
 					params = hierarchy;
 					selectedView = storyArray.join().replace(/,/g , "/")
@@ -733,7 +649,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
 
 				}
 				setTimeout(function(){
-					$('#areaselect').val(null).trigger('change.select2');
+					$('#areaselect').val("").trigger('chosen:updated');
 					d3.select(storyId).classed("hoveredOver", false)
 					d3.select("#chart").style("pointer-events", "auto")
 					update_barchart("c0");
@@ -1624,13 +1540,13 @@ var tree = DataStructures.Tree.createFromFlatTable(data),
 		}
 
         return g;
-		g.each( function(d,i) {
-			d3.selectAll(".children").selectAll("text")
-				.data(d._children).enter().append("text")
-				.attr("class", "childLabels")
-				.attr("dy", "0.5em")
-				.text(function(d){ return d.name;});
-			})
+		// g.each( function(d,i) {
+		// 	d3.selectAll(".children").selectAll("text")
+		// 		.data(d._children).enter().append("text")
+		// 		.attr("class", "childLabels")
+		// 		.attr("dy", "0.5em")
+		// 		.text(function(d){ return d.name;});
+		// 	})
       }
 
 	  function resize(text, width){
@@ -1707,9 +1623,11 @@ var tree = DataStructures.Tree.createFromFlatTable(data),
 
 			//$('#areaselect').val($(this).attr("id")); // Select the option with a value of '1'
 			//$('#areaselect').trigger('change'); // Notify any JS components that the value changed
-			d3.select(".select2-selection__placeholder").text($(this).attr("desc"))
-			update_barchart($(this).attr("id"));
-     		updateStacked($(this).attr("id"));
+			// d3.select(".select2-selection__placeholder").text($(this).attr("desc"))
+      $('#areaselect').val($(this).attr("id")); // Select the option with a value of '1'
+			$('#areaselect').trigger('chosen:updated'); // Notify any JS components that the
+      update_barchart($(this).attr("id"));
+     	updateStacked($(this).attr("id"));
 			//console.log($(this).attr("id"));
 
 	};
@@ -1717,7 +1635,11 @@ var tree = DataStructures.Tree.createFromFlatTable(data),
 	function mouseout (){
 		d3.select("#blurb").select("#txt2").html("Goods exports 2017: ");
 		d3.select("#blurb").select("#txt3").html("£"+formatNumber(dataset.size)+" million");
-		d3.select(".select2-selection__placeholder").text("Total");
+		// d3.select(".select2-selection__placeholder").text("Total");
+    // d3.select("a.chosen-single.chosen-single-with-deselect.chosen-default").select("span").html("Hello")
+
+    $('#areaselect').val("Total"); // Select the option with a value of '1'
+    $('#areaselect').trigger('chosen:updated'); // Notify any JS components that the
 		//update_barchart("#c0");
      	//updateStacked("#c0");
 
@@ -1751,21 +1673,15 @@ var tree = DataStructures.Tree.createFromFlatTable(data),
 
 	d3.select("#upBtn").on('click', function() {
 	    	simulateClick(grandparent[0][0]);
-
 	});
 
 	d3.select("#topBtn").on('click', function() {
 	    	backToTop();
 	});
 
-
-
 	setTimeout( function(){
 	 	if (pymChild) {
        		pymChild.sendHeight();
-
-
-
 			var url = decodeURI(window.location.hash);
 
 
@@ -1802,7 +1718,6 @@ var tree = DataStructures.Tree.createFromFlatTable(data),
 
 
 function backToTop (){
-
 			$(levelArray).each(function(i){
 				setTimeout(function(){
 					simulateClick(grandparent[0][0]);
@@ -1812,9 +1727,8 @@ function backToTop (){
 
 
 
-	function updateHash() {
-
-	}
+function updateHash() {
+}
 
 
 
@@ -1826,7 +1740,7 @@ function backToTop (){
 },4000)*/
 
 
-    </script>
+</script>
 
 
 
