@@ -20,7 +20,7 @@ function ready (error, dataexports, dataimports, geog){
               //width = 960 - margin.left - margin.right,
               //height = 500 - margin.top - margin.bottom;
 
-  var dvcyear = 2017
+  var dvcyear = 2018
 
 
 
@@ -176,24 +176,6 @@ for (var column in latestcountrydataE[0]) {
     lastyeardataE.push(latestcountrydataE[0][column]);
 }
 
-
-alldata5=d3.zip(lastyeardataI, variables).sort(function(a,b){return d3.descending(+a[0],+b[0])}).slice(0,5)
-console.log(alldata5)
-
-exportsdata5=d3.zip(lastyeardataE, variables).sort(function(a,b){return d3.descending(+a[0],+b[0])}).slice(0,5)
-console.log(exportsdata5)
-
-
-
-
-exportsdata5.forEach(function(d){
-for (var i=0; i< exportsdata5.length; i++ ){
-  for (var j=0; j<exportsdata5[i].length; j++){
-    // console.log(exportsdata5[i][0], i , j)
-  }
-};
-})
-
 //zip the data with list of variables, sort it descending, then take top 5
 zippeddataI=d3.zip(lastyeardataI,variables).sort(function(a,b){return d3.descending(+a[0],+b[0]);}).slice(0,5)
 
@@ -212,54 +194,53 @@ zippeddataE.forEach(function(d,i){
 })
 
 //get data for that country for all years
-countrydata_allI = dataimports.filter(function(d){return d.CountryId==code })
-countrydata_allE = dataexports.filter(function(d){return d.CountryId==code })
+// countrydata_allI = dataimports.filter(function(d){return d.CountryId==code })
+// countrydata_allE = dataexports.filter(function(d){return d.CountryId==code })
 
 
 //find the data for all the top 5 commodities
-temparrayI=[]
-countrydata_allI.forEach(function(d){
-    for(var i=0;i<top5codesI.length;i++){
-      temparrayI.push({year:+d.Year,code:top5codesI[i],amt:+d[top5codesI[i]]})
-    }
-  })
+// temparrayI=[]
+// countrydata_allI.forEach(function(d){
+//     for(var i=0;i<top5codesI.length;i++){
+//       temparrayI.push({year:+d.Year,code:top5codesI[i],amt:+d[top5codesI[i]]})
+//     }
+//   })
 
-temparrayE=[]
-countrydata_allE.forEach(function(d){
-    for(var i=0;i<top5codesI.length;i++){
-      temparrayE.push({year:+d.Year,code:top5codesE[i],amt:+d[top5codesE[i]]})
-    }
-  })
+// temparrayE=[]
+// countrydata_allE.forEach(function(d){
+//     for(var i=0;i<top5codesI.length;i++){
+//       temparrayE.push({year:+d.Year,code:top5codesE[i],amt:+d[top5codesE[i]]})
+//     }
+//   })
 
 //put it into a format for sparklines
-newarrayI = {};
-for(var i=0;i<top5codesI.length;i++){
-  newarrayI[top5codesI[i]]=temparrayI.filter(function(d){return d.code==top5codesI[i]})
-                                  .map(function(d){return {date:d3.timeParse("%Y")(d.year),amt:d.amt}})
-}
-
-newarrayE = {};
-for(var i=0;i<top5codesE.length;i++){
-  newarrayE[top5codesE[i]]=temparrayE.filter(function(d){return d.code==top5codesE[i]})
-                                  .map(function(d){return {date:d3.timeParse("%Y")(d.year),amt:d.amt}})
-}
-
-perchangeI=[]
-for(var i=0;i<top5codesI.length;i++){
-    perchangeI[i]=(newarrayI[top5codesI[i]][yearssorted.length-1].amt-newarrayI[top5codesI[i]][0].amt)/newarrayI[top5codesI[i]][0].amt
-}
-
-perchangeE=[]
-for(var i=0;i<top5codesE.length;i++){
-  perchangeE[i]=(newarrayE[top5codesE[i]][yearssorted.length-1].amt-newarrayE[top5codesE[i]][0].amt)/newarrayE[top5codesE[i]][0].amt
-}
+// newarrayI = {};
+// for(var i=0;i<top5codesI.length;i++){
+//   newarrayI[top5codesI[i]]=temparrayI.filter(function(d){return d.code==top5codesI[i]})
+//                                   .map(function(d){return {date:d3.timeParse("%Y")(d.year),amt:d.amt}})
+// }
+//
+// newarrayE = {};
+// for(var i=0;i<top5codesE.length;i++){
+//   newarrayE[top5codesE[i]]=temparrayE.filter(function(d){return d.code==top5codesE[i]})
+//                                   .map(function(d){return {date:d3.timeParse("%Y")(d.year),amt:d.amt}})
+// }
+//
+// perchangeI=[]
+// for(var i=0;i<top5codesI.length;i++){
+//     perchangeI[i]=(newarrayI[top5codesI[i]][yearssorted.length-1].amt-newarrayI[top5codesI[i]][0].amt)/newarrayI[top5codesI[i]][0].amt
+// }
+//
+// perchangeE=[]
+// for(var i=0;i<top5codesE.length;i++){
+//   perchangeE[i]=(newarrayE[top5codesE[i]][yearssorted.length-1].amt-newarrayE[top5codesE[i]][0].amt)/newarrayE[top5codesE[i]][0].amt
+// }
 
 //stuff for bar charts
 barsI = []
 for (var i=0;i<top5codesI.length;i++){
   barsI.push({'name':top5codesI[i],'amt':+latestcountrydataI[0][top5codesI[i]]})
 }
-
 
 barsE = []
 for (var i=0;i<top5codesE.length;i++){
@@ -282,7 +263,7 @@ xMax = d3.max([xMaxI,xMaxE])
 x.domain([0,xMax])
 
 svgBarI.select(".x")
-    .transition()
+  .transition()
 	.call(xAxis);
 
 yImport.domain(top5codesI);
@@ -290,36 +271,29 @@ yImport.domain(top5codesI);
 svgBarI.select('.y')
       .call(yAxisImport);
 
-d3.select("#importsChart").select("g.y.axis").selectAll(".tick").attr("class", function(d,i){ return "tick tick"+i})
-
-
 svgBarI.selectAll(".barsI").selectAll('rect')
     .data(barsI)
     .transition()
     .attr("y", function(d){return yImport(d.name)})
-    .attr("width", function(d){ return x(d.amt)})
+    .attr("width", function(d){return x(d.amt)})
     .attr("height", yImport.bandwidth()/3)
 
-    for (var i=0; i< zippeddataI.length; i++ ){
-        if ( +zippeddataI[i][0] < 1 || +zippeddataI[i][0] == NaN ||+zippeddataI[i][0] == ".."){
-           console.log(i)
-           d3.select("#importsChart").select("g.y.axis").select("g.tick" + [i]).select("text").text(function(d,i){ console.log(d, i); return  "No data available"})
-         };
+d3.select("#importsChart").select("g.y.axis").selectAll(".tick").attr("class", function(d,i){ return "tick tick"+i})
+
+  for (var i=0; i< zippeddataI.length; i++ ){
+    if ( +zippeddataI[i][0] < 1 || +zippeddataI[i][0] == NaN ||+zippeddataI[i][0] == ".."){
+       d3.select("#importsChart").select("g.y.axis").select("g.tick" + [i]).select("text").text(function(d,i){ return  "No data available"})
+     };
     }
-
-
 
 svgBarE.select(".x")
     .transition()
-	  .call(xAxis);
+	.call(xAxis);
 
 yExport.domain(top5codesE);
 
 svgBarE.select('.y')
       .call(yAxisExport);
-
-
-d3.select("#exportsChart").select("g.y.axis").selectAll(".tick").attr("class", function(d,i){ return "tick tick"+i})
 
 svgBarE.selectAll(".barsE").selectAll('rect')
     .data(barsE)
@@ -328,8 +302,15 @@ svgBarE.selectAll(".barsE").selectAll('rect')
     .attr("width", function(d){return x(d.amt)})
     .attr("height", yExport.bandwidth()/3)
 
-//adjust text position
+d3.select("#exportsChart").select("g.y.axis").selectAll(".tick").attr("class", function(d,i){ return "tick tick"+i})
 
+  for (var i=0; i< zippeddataE.length; i++ ){
+    if ( +zippeddataE[i][0] < 1 || +zippeddataE[i][0] == NaN || +zippeddataE[i][0] == ".."){
+      d3.select("#exportsChart").select("g.y.axis").select("g.tick" + [i]).select("text").text(function(d,i){ return  "No data available"})
+    };
+  }
+
+//adjust text position
 d3.selectAll(".y text")
     .attr("transform","translate(14,3)")
     .attr("stroke","#fff")
@@ -401,7 +382,7 @@ function getCentroids() {
 function highlightcountry(countrycode) {
 
     //Update dropdown
-    $("#areaselect").val(countrycode).trigger('change.select2');
+    $("#areaselect").val(countrycode).trigger('chosen:updated');
 
     //Draw barcode highlight rects on top of all bars
     if(mobile == false) {
@@ -464,10 +445,10 @@ function highlightcountry(countrycode) {
 
 
 
-function unhighlightcountry(countrycode, filterdata, code) {
+function unhighlightcountry(countrycode) {
 
   //update dropdown
-	$("#areaselect").val("").trigger('change.select2');
+	$("#areaselect").val("").trigger('chosen:updated');
 
 
 	d3.select("#shape" + countrycode).classed("countries_highlights",false);
@@ -531,7 +512,7 @@ function createBarcode(){
         .append("div")
 		.attr("id","barcodelabels")
 		.attr("class","hidden-xs")
-		.html("<span style='font-weight:bold'>Trade in services</span> "+dvcyear)
+		.html("<span style='font-weight:bold'>Trade in Services</span> "+dvcyear)
 		.append("div")
         .style("padding-left",barcodemarginDT[3] + "px")
         .style("padding-right",barcodemarginDT[1] + "px")
@@ -803,7 +784,8 @@ function selectList() {
 	var optns = d3.select("#selectNav").append("div").attr("id","sel").append("select")
 		.attr("id","areaselect")
 		.attr("style","width:67%")
-		.attr("class","chosen-select");
+		.attr("class","chosen-select")
+    .attr('data-placeholder',"Choose a trading partner");
 
 
 	optns.append("option")
@@ -815,7 +797,7 @@ function selectList() {
 
 	myId=null;
 
- 	$('#areaselect').select2({placeholder:"Choose a trading partner",allowClear:true,dropdownParent:$('#sel')})
+ 	$('#areaselect').chosen({allow_single_deselect:true,no_results_text:"No results found for:",width:"67%"})
 
 	$('#areaselect').on('change',function(){
 
@@ -838,16 +820,13 @@ function selectList() {
             'countryselected':areacode
           })
 
-			}
+			}else{
+        unhighlightcountry(areacode);
+        enableHoverEvents();
+        changeURL("")
+      }
 
 	});
-
-	$("#areaselect").on("select2:unselect", function (e) {
-          unhighlightcountry(areacode);
-					enableHoverEvents();
-          changeURL("")
-	});
-
 }; // end selectlist
 
 
@@ -885,13 +864,13 @@ function barChartInitial() {
 //make a bar chart
 chartWidth=parseInt(d3.select("#chartsnsparks").style("width"));
 
-d3.select("#tradewith").html("UK Trade in services <span style='font-weight:300'>"+dvcyear+"</span>")
+d3.select("#tradewith").html("UK Trade in Services <span style='font-weight:300'>"+dvcyear+"</span>")
 
 if(mobile == false) {
-	chartWidth = (chartWidth*0.75)/2
+	chartWidth = (chartWidth*0.9)/2
 
 } else {
-	chartWidth = (chartWidth*0.75);
+	chartWidth = (chartWidth*0.9);
 	height = height * 2;
 }
 
@@ -983,35 +962,7 @@ xAxis = d3.axisBottom(x)
 
 //adjust text position
 
-d3.selectAll(".y text").attr("x", 5);
 
-
-//things for percentage change
-dummyarrayfortext=[1,2,3,4,5]
-
-dummyarrayfortext.forEach(function(d,i){
-  d3.select(".perchangeI")
-  .append('text')
-  .attr('x',0)
-  .attr('y',yImport.bandwidth()/5*i)
-  .attr("text-anchor", "start")
-  .style("font-size", "12px")
-  .style("fill", "#666")
-  .attr("font-family","'Open Sans', sans-serif")
-  .text("");
-})
-
-dummyarrayfortext.forEach(function(d,i){
-        d3.select(".perchangeE")
-        .append('text')
-        .attr('x',0)
-        .attr('y',yExport.bandwidth()/5*i)
-        .attr("text-anchor", "start")
-        .style("font-size", "12px")
-        .style("fill", "#666")
-        .attr("font-family","'Open Sans', sans-serif")
-        .text("");
-      })
       d3.select('#imports').select("svg")
       .append('text')
       .attr("x",margin.left)
@@ -1044,6 +995,8 @@ dummyarrayfortext.forEach(function(d,i){
       .text(" services")
       .style("font-weight","normal");
 
+d3.selectAll(".y text").attr("x", 5);
+
 
 
 pymChild.sendHeight();
@@ -1054,16 +1007,16 @@ pymChild.sendHeight();
 
 
 //some code to stop select2 opening when clearing
-$('#areaselect').on('select2:unselecting', function(ev) {
-    if (ev.params.args.originalEvent) {
-        // When unselecting (in multiple mode)
-        ev.params.args.originalEvent.stopPropagation();
-    } else {
-        // When clearing (in single mode)
-        $(this).one('select2:opening', function(ev) { ev.preventDefault(); });
-        filterdata("W1")//set the it back to world view
-    }
-});
+// $('#areaselect').on('select2:unselecting', function(ev) {
+//     if (ev.params.args.originalEvent) {
+//         // When unselecting (in multiple mode)
+//         ev.params.args.originalEvent.stopPropagation();
+//     } else {
+//         // When clearing (in single mode)
+//         $(this).one('select2:opening', function(ev) { ev.preventDefault(); });
+//         filterdata("W1")//set the it back to world view
+//     }
+// });
 
 
 }//end ready
